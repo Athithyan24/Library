@@ -15,17 +15,18 @@ export default function StudentHome() {
   const next = loans[0];
 
   return (
-    <div className="mx-auto max-w-6xl">
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div className="max-w-2xl">
-          <p className="text-xs uppercase tracking-[0.18em] text-mute">{user.courseName} · {user.yearLabel}</p>
-          <h1 className="mt-2 font-serif text-4xl leading-tight sm:text-5xl">
-            {next ? `${user.name.split(' ')[0]}, ${next.book?.title} is due ${when(next.dueDate)}.` : `${user.name.split(' ')[0]}, nothing is out in your name.`}
-          </h1>
-          {fineDue > 0 && <p className="mt-3 text-clay">₹{fineDue} is waiting at the desk.</p>}
+    <div>
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#fff4ee] to-[#f4f7ff] px-6 py-7 dark:from-paper dark:to-panel">
+        <p className="text-xs font-medium text-mute">{user.courseName} · {user.yearLabel}</p>
+        <h2 className="mt-2 max-w-xl text-2xl font-semibold tracking-tight">
+          {next ? `${next.book?.title} is due ${when(next.dueDate)}.` : 'Nothing is out in your name.'}
+        </h2>
+        {fineDue > 0 && <p className="mt-2 text-sm text-clay">₹{fineDue} is waiting at the desk.</p>}
+        <Link to="/catalog" className="mt-4 inline-flex rounded-xl bg-ink px-4 py-2 text-sm font-medium text-white">Browse library</Link>
+        <div className="pointer-events-none absolute right-4 top-4 hidden sm:block">
+          <LottieSlot name="read" className="h-24 w-24" />
         </div>
-        <LottieSlot name="read" className="h-28 w-28" />
-      </div>
+      </section>
 
       <section className="mt-10">
         <div className="flex items-baseline justify-between">

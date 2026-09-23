@@ -3,26 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --paper: 243 239 230;
-  --panel: 255 252 247;
-  --ink: 28 25 21;
-  --mute: 110 102 92;
-  --line: 226 219 206;
-  --pine: 27 74 56;
-  --brass: 166 132 74;
-  --clay: 143 68 58;
+  --canvas: 230 237 248;
+  --paper: 246 247 251;
+  --panel: 255 255 255;
+  --ink: 24 26 33;
+  --mute: 125 131 145;
+  --line: 232 235 242;
+  --pine: 255 90 48;
+  --brass: 255 154 96;
+  --clay: 214 74 64;
   color-scheme: light;
 }
 
 .dark {
-  --paper: 18 17 15;
-  --panel: 28 26 23;
-  --ink: 243 237 226;
-  --mute: 168 158 144;
-  --line: 52 48 42;
-  --pine: 154 196 172;
-  --brass: 212 176 112;
-  --clay: 224 146 134;
+  --canvas: 14 16 22;
+  --paper: 22 24 32;
+  --panel: 28 31 40;
+  --ink: 244 246 250;
+  --mute: 164 170 184;
+  --line: 48 52 64;
+  --pine: 255 122 82;
+  --brass: 255 176 122;
+  --clay: 240 140 130;
   color-scheme: dark;
 }
 
@@ -32,30 +34,39 @@ html, body, #root { min-height: 100%; }
 
 body {
   margin: 0;
-  background: rgb(var(--paper));
+  background: rgb(var(--canvas));
   color: rgb(var(--ink));
-  font-family: Figtree, "Segoe UI", sans-serif;
-  font-feature-settings: "ss01";
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
 }
 
 button, input, select, textarea { font: inherit; color: inherit; }
 
-::selection { background: rgb(var(--brass) / 0.35); }
+::selection { background: rgb(var(--pine) / 0.22); }
 
 .num { font-variant-numeric: tabular-nums; }
 
 .field {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid rgb(var(--line));
-  background: rgb(var(--paper) / 0.55);
-  padding: 0.8rem 0.9rem;
+  background: rgb(var(--panel));
+  padding: 0.7rem 0.85rem;
   outline: none;
 }
 
-.field:focus { border-color: rgb(var(--pine)); box-shadow: 0 0 0 4px rgb(var(--pine) / 0.12); }
+.field:focus {
+  border-color: rgb(var(--pine) / 0.7);
+  box-shadow: 0 0 0 4px rgb(var(--pine) / 0.12);
+}
 
 .spine {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
+}
+
+.search-ring {
+  background:
+    linear-gradient(rgb(var(--panel)), rgb(var(--panel))) padding-box,
+    linear-gradient(90deg, #c4b5fd, #fb7185, #fdba74) border-box;
+  border: 1.5px solid transparent;
 }

@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 export function Btn({ children, tone = 'pine', className = '', ...props }) {
   const tones = {
-    pine: 'bg-pine text-paper',
+    pine: 'bg-pine text-white',
     quiet: 'border border-line bg-panel/70',
     clay: 'bg-clay text-white',
     ghost: 'bg-transparent',

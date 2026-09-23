@@ -56,22 +56,22 @@ const NAV = {
     { to: '/activity', label: 'Activity', icon: History },
   ],
   student: [
-    { to: '/', label: 'Today', icon: LayoutDashboard, end: true },
-    { to: '/catalog', label: 'Catalogue', icon: Library },
+    { to: '/', label: 'Home', icon: LayoutDashboard, end: true },
+    { to: '/catalog', label: 'Library', icon: Library },
     { to: '/my-library', label: 'My shelf', icon: Bookmark },
     { to: '/resources', label: 'Materials', icon: BookOpen },
   ],
 };
 
 const CRUMB = {
-  '/': 'Today',
+  '/': 'Home',
   '/departments': 'Departments',
   '/staff': 'Appointments',
   '/academics': 'Academic years',
-  '/catalog': 'Catalogue',
+  '/catalog': 'Library',
   '/shelf': 'Shelf',
   '/students': 'Students',
-  '/desk': 'Circulation desk',
+  '/desk': 'Circulation',
   '/inventory': 'Copies',
   '/fines': 'Fines',
   '/resources': 'Materials',
@@ -118,121 +118,55 @@ export function Shell() {
   const width = collapsed ? 84 : 248;
 
   return (
-    <div className="min-h-screen md:flex">
-      <AnimatePresence>
-        {mobileNav && (
-          <motion.button
-            className="fixed inset-0 z-30 bg-ink/30 backdrop-blur-sm md:hidden"
-            onClick={() => setMobileNav(false)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen bg-canvas p-2 sm:p-4 md:p-5">
+      <div className="mx-auto flex h-[calc(100vh-1rem)] max-w-[10000px] overflow-hidden rounded-[28px] border border-white/70 bg-panel shadow-lift sm:h-[calc(100vh-2.5rem)] dark:border-line">
+        <AnimatePresence>
+          {mobileNav && (
+            <motion.button
+              className="fixed inset-0 z-30 bg-ink/30 backdrop-blur-sm md:hidden"
+              onClick={() => setMobileNav(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+          )}
+        </AnimatePresence>
 
-      <motion.aside
-        className={`fixed inset-y-0 left-0 z-40 flex-col border-r border-line bg-paper px-3 py-4 md:sticky md:top-0 md:h-screen ${
-          mobileNav ? 'flex' : 'hidden md:flex'
-        }`}
-        animate={{ width }}
-        transition={{ type: 'spring', stiffness: 280, damping: 32 }}
-      >
-        <div className={`mb-6 flex items-center ${collapsed ? 'justify-center' : 'justify-between'} px-1`}>
-          <div className="flex items-center gap-3 overflow-hidden">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-pine text-paper">
-              <Library size={18} strokeWidth={1.7} />
+        <motion.aside
+          className={`fixed inset-y-2 left-2 z-40 flex-col overflow-y-auto rounded-[24px] border border-line bg-panel px-3 py-4 md:static md:inset-auto md:z-auto md:h-full md:rounded-none md:border-0 md:border-r ${
+            mobileNav ? 'flex' : 'hidden md:flex'
+          }`}
+          animate={{ width }}
+          transition={{ type: 'spring', stiffness: 280, damping: 32 }}
+        >
+          <div className={`mb-4 flex items-center gap-2.5 px-1 ${collapsed ? 'justify-center' : ''}`}>
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-pine text-white shadow-card">
+              <Library size={16} strokeWidth={2.2} />
+            </span>
+            {!collapsed && <p className="text-[15px] font-semibold tracking-tight">Reading Room</p>}
+          </div>
+
+          <button
+            onClick={() => setMenu((open) => !open)}
+            className={`relative mb-4 flex items-center gap-3 rounded-2xl px-2 py-2 text-left hover:bg-paper ${collapsed ? 'justify-center' : ''}`}
+          >
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#ffe7dc] text-sm font-semibold text-pine">
+              {user.name.slice(0, 1)}
             </span>
             {!collapsed && (
-              <div className="min-w-0">
-                <p className="font-serif text-lg leading-none">Reading Room</p>
-                <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-mute">Computer Science</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <nav className="flex flex-1 flex-col gap-1">
-          {items.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.end} className="relative">
-              {({ isActive }) => (
-                <span className={`relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm ${collapsed ? 'justify-center' : ''}`}>
-                  {isActive && (
-                    <motion.span layoutId="active-nav" className="absolute inset-0 rounded-2xl bg-pine/10" transition={{ type: 'spring', stiffness: 380, damping: 34 }} />
-                  )}
-                  <item.icon size={18} strokeWidth={1.7} className={`relative ${isActive ? 'text-pine' : 'text-mute'}`} />
-                  <AnimatePresence initial={false}>
-                    {!collapsed && (
-                      <motion.span
-                        className={`relative truncate ${isActive ? 'text-ink' : 'text-mute'}`}
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0 }}
-                      >
-                        {item.label}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </span>
-              )}
-            </NavLink>
-          ))}
-        </nav>
-
-        <button
-          onClick={toggleCollapsed}
-          className="mt-3 hidden items-center justify-center gap-2 rounded-2xl px-3 py-2 text-sm text-mute hover:bg-panel md:flex"
-        >
-          <motion.span animate={{ rotate: collapsed ? 180 : 0 }}>
-            <PanelLeft size={16} />
-          </motion.span>
-          {!collapsed && 'Collapse'}
-        </button>
-      </motion.aside>
-
-      <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-line/80 bg-paper/80 px-4 py-3 backdrop-blur-xl md:px-8">
-          <button className="md:hidden" onClick={() => setMobileNav(true)} aria-label="Open menu">
-            <Menu size={20} />
-          </button>
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-mute">Department library</p>
-            <p className="truncate font-serif text-lg leading-tight">{crumb}</p>
-          </div>
-          <button
-            onClick={() => setPalette(true)}
-            className="hidden items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 text-sm text-mute sm:flex"
-          >
-            <Search size={14} />
-            Search the room
-            <kbd className="rounded-md border border-line px-1.5 text-[10px]">Ctrl K</kbd>
-          </button>
-          <button className="sm:hidden" onClick={() => setPalette(true)} aria-label="Search">
-            <Search size={18} />
-          </button>
-          <button onClick={() => setNotices(!notices)} className="relative rounded-full p-2" aria-label="Notifications">
-            <Bell size={18} />
-            <NoticeDot />
-          </button>
-          <button onClick={toggleDark} className="rounded-full p-2" aria-label="Toggle theme">
-            {dark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <div className="relative">
-            <button onClick={() => setMenu((open) => !open)} className="flex items-center gap-2 rounded-full border border-line bg-panel py-1 pl-1 pr-3">
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-brass/30 text-xs font-medium">
-                {user.name.slice(0, 1)}
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold">{user.name}</span>
+                <span className="block truncate text-xs text-mute">{user.email || user.username}</span>
               </span>
-              <span className="hidden text-sm sm:block">{user.name.split(' ')[0]}</span>
-            </button>
+            )}
             <AnimatePresence>
               {menu && (
                 <motion.div
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="absolute right-0 mt-2 w-56 rounded-2xl border border-line bg-panel p-2 shadow-lift"
+                  className="absolute left-0 top-14 z-20 w-52 rounded-2xl border border-line bg-panel p-1.5 shadow-lift"
                 >
-                  <p className="px-2 py-1 text-xs uppercase tracking-wider text-mute">{user.role}</p>
                   <button className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-sm" onClick={() => navigate('/profile')}>
                     <UserRound size={15} /> Profile
                   </button>
@@ -251,22 +185,87 @@ export function Shell() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
-        </header>
+          </button>
 
-        <main className="px-4 py-6 md:px-8 md:py-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.28 }}
+          {!collapsed && <p className="mb-1 px-3 text-[11px] font-medium text-mute">Menu</p>}
+          <nav className="flex flex-1 flex-col gap-0.5">
+            {items.map((item) => (
+              <NavLink key={item.to} to={item.to} end={item.end}>
+                {({ isActive }) => (
+                  <span className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${collapsed ? 'justify-center' : ''} ${isActive ? 'bg-paper font-medium text-ink' : 'text-mute hover:bg-paper'}`}>
+                    <item.icon size={16} strokeWidth={1.8} className={isActive ? 'text-ink' : ''} />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </span>
+                )}
+              </NavLink>
+            ))}
+          </nav>
+
+          {!collapsed && (
+            <div className="mt-4 rounded-2xl bg-[#fff1ea] p-4 dark:bg-paper">
+              <p className="text-sm font-semibold leading-snug">Need a title for class?</p>
+              <p className="mt-1 text-xs leading-relaxed text-mute">Search the department shelf and send a request to the desk.</p>
+              <button onClick={() => navigate('/catalog')} className="mt-3 w-full rounded-xl bg-ink py-2 text-sm font-medium text-white">
+                Browse library
+              </button>
+            </div>
+          )}
+
+          <button
+            onClick={toggleCollapsed}
+            className="mt-3 hidden items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm text-mute hover:bg-paper md:flex"
+          >
+            <motion.span animate={{ rotate: collapsed ? 180 : 0 }}>
+              <PanelLeft size={16} />
+            </motion.span>
+            {!collapsed && 'Collapse'}
+          </button>
+        </motion.aside>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="flex items-center gap-3 border-b border-line px-4 py-3.5 md:px-6">
+            <button className="rounded-xl border border-line p-2 md:hidden" onClick={() => setMobileNav(true)} aria-label="Open menu">
+              <Menu size={16} />
+            </button>
+            <h1 className="w-28 shrink-0 text-base font-semibold tracking-tight sm:w-40">{crumb}</h1>
+            <button
+              onClick={() => setPalette(true)}
+              className="mx-auto hidden h-10 w-full max-w-md items-center gap-2 rounded-xl border border-line bg-paper px-3 text-sm text-mute md:flex"
             >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
-        </main>
+              <Search size={15} />
+              <span className="flex-1 text-left">Search</span>
+            </button>
+            <div className="ml-auto flex items-center gap-1.5">
+              <button className="rounded-xl border border-line p-2 md:hidden" onClick={() => setPalette(true)} aria-label="Search">
+                <Search size={16} />
+              </button>
+              <button onClick={() => navigate('/catalog')} className="hidden rounded-xl border border-line p-2 sm:grid" aria-label="Library">
+                <Library size={16} />
+              </button>
+              <button onClick={() => setNotices(!notices)} className="relative rounded-xl border border-line p-2" aria-label="Notifications">
+                <Bell size={16} />
+                <NoticeDot />
+              </button>
+              <button onClick={toggleDark} className="rounded-xl border border-line p-2" aria-label="Toggle theme">
+                {dark ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+            </div>
+          </header>
+
+          <main className="flex-1 overflow-auto px-4 py-5 md:px-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25 }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
+          </main>
+        </div>
       </div>
 
       <CommandPalette open={palette} onClose={() => setPalette(false)} items={items} />
@@ -343,6 +342,11 @@ function CommandPalette({ open, onClose, items }) {
     queryFn: async () => (await api.get('/search', { params: { q } })).data,
     enabled: open && q.trim().length > 1,
   });
+  const trending = useQuery({
+    queryKey: ['books', 'trending'],
+    queryFn: async () => (await api.get('/books', { params: { sort: 'popular' } })).data,
+    enabled: open,
+  });
 
   const pages = useMemo(
     () => items.filter((item) => item.label.toLowerCase().includes(q.toLowerCase())),
@@ -358,45 +362,79 @@ function CommandPalette({ open, onClose, items }) {
     onClose();
   };
 
+  const recent = ['Database', 'Operating Systems', 'Machine Learning', 'Networks'];
+  const trends = (trending.data?.books || []).slice(0, 4);
+
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <button className="absolute inset-0 bg-ink/30 backdrop-blur-md" onClick={onClose} aria-label="Close search" />
+        <motion.div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <button className="absolute inset-0 bg-ink/25 backdrop-blur-sm" onClick={onClose} aria-label="Close search" />
           <motion.div
-            initial={{ y: 16, scale: 0.98 }}
+            initial={{ y: 12, scale: 0.98 }}
             animate={{ y: 0, scale: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-line bg-panel shadow-lift"
+            exit={{ y: 8, opacity: 0 }}
+            className="relative w-full max-w-2xl overflow-hidden rounded-[28px] bg-panel p-4 shadow-lift"
           >
-            <div className="flex items-center gap-2 border-b border-line px-4">
-              <Search size={16} className="text-mute" />
+            <div className="search-ring flex items-center gap-2 rounded-2xl px-4">
               <input
                 autoFocus
                 value={q}
                 onChange={(event) => setQ(event.target.value)}
-                placeholder="Titles, people, pages"
-                className="w-full bg-transparent py-4 outline-none"
+                placeholder="What are you looking for?"
+                className="w-full bg-transparent py-3.5 text-sm outline-none"
               />
+              <Search size={16} className="text-mute" />
             </div>
-            <div className="max-h-80 overflow-auto p-2">
-              {pages.map((item) => (
-                <button key={item.to} onClick={() => go(item.to)} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm hover:bg-paper">
-                  <item.icon size={15} /> {item.label}
+
+            <p className="mb-2 mt-4 text-xs text-mute">Recent search</p>
+            <div className="flex flex-wrap gap-2">
+              {recent.map((chip) => (
+                <button key={chip} onClick={() => setQ(chip)} className="inline-flex items-center gap-1 rounded-lg bg-paper px-2.5 py-1 text-xs text-mute">
+                  <X size={11} /> {chip}
                 </button>
               ))}
-              {(query.data?.books || []).map((book) => (
-                <button key={book._id} onClick={() => go(`/books/${book._id}`)} className="flex w-full flex-col rounded-xl px-3 py-2 text-left hover:bg-paper">
-                  <span className="text-sm">{book.title}</span>
-                  <span className="text-xs text-mute">{book.author}</span>
-                </button>
-              ))}
-              {(query.data?.people || []).map((person) => (
-                <button key={person._id} onClick={() => go('/students')} className="flex w-full flex-col rounded-xl px-3 py-2 text-left hover:bg-paper">
-                  <span className="text-sm">{person.name}</span>
-                  <span className="text-xs text-mute">{person.courseName}</span>
-                </button>
-              ))}
+            </div>
+
+            <p className="mb-2 mt-4 text-xs text-mute">{q.trim().length > 1 ? 'Results' : 'Trending in the library'}</p>
+            {q.trim().length > 1 ? (
+              <div className="max-h-64 space-y-1 overflow-auto">
+                {pages.map((item) => (
+                  <button key={item.to} onClick={() => go(item.to)} className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-sm hover:bg-paper">
+                    <item.icon size={15} /> {item.label}
+                  </button>
+                ))}
+                {(query.data?.books || []).map((book) => (
+                  <button key={book._id} onClick={() => go(`/books/${book._id}`)} className="flex w-full flex-col rounded-xl px-2 py-2 text-left hover:bg-paper">
+                    <span className="text-sm font-medium">{book.title}</span>
+                    <span className="text-xs text-mute">{book.author}</span>
+                  </button>
+                ))}
+                {(query.data?.people || []).map((person) => (
+                  <button key={person._id} onClick={() => go('/students')} className="flex w-full flex-col rounded-xl px-2 py-2 text-left hover:bg-paper">
+                    <span className="text-sm font-medium">{person.name}</span>
+                    <span className="text-xs text-mute">{person.courseName}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {trends.map((book) => (
+                  <button key={book._id} onClick={() => go(`/books/${book._id}`)} className="flex items-center gap-3 rounded-2xl border border-line p-2.5 text-left hover:bg-paper">
+                    <span className="h-12 w-12 shrink-0 rounded-xl" style={{ background: book.coverColor || '#ff5a30' }} />
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium">{book.title}</span>
+                      <span className="text-xs text-mute">{book.available > 0 ? `${book.available} on shelf` : 'Waitlist'}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-4 flex flex-wrap gap-4 border-t border-line pt-3 text-[11px] text-mute">
+              <span>↑↓ Navigate</span>
+              <span>Esc Close</span>
+              <span>Enter Select</span>
             </div>
           </motion.div>
         </motion.div>

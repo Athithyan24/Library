@@ -39,70 +39,60 @@ export default function Login() {
   };
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-[1.15fr_0.85fr]">
-      <section className="relative flex flex-col justify-between px-6 py-8 sm:px-12 lg:px-16">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-mute">Department of Computer Science</p>
-        <div className="max-w-xl py-16">
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="font-serif text-5xl leading-[1.05] sm:text-6xl"
-          >
-            A quieter room for the department’s books.
-          </motion.h1>
-          <p className="mt-6 max-w-md text-base leading-relaxed text-mute">
-            Issue slips, reservations, fines, and the digital shelf — kept as one reading room, not a stack of forms.
-          </p>
-          <div className="mt-8">
-            <LottieSlot name="login" className="h-36 w-36" />
+    <div className="flex min-h-screen items-center justify-center bg-canvas p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="grid w-full max-w-5xl overflow-hidden rounded-[28px] bg-panel shadow-lift lg:grid-cols-[1.05fr_0.95fr]"
+      >
+        <section className="relative hidden flex-col justify-between bg-gradient-to-br from-[#fff4ee] to-[#f3f6ff] p-10 lg:flex">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-pine text-white">CS</span>
+            Reading Room
           </div>
-        </div>
-        <p className="text-sm text-mute">Loans run fourteen days. Late copies are ₹5 a day.</p>
-      </section>
-
-      <section className="flex items-center border-line bg-panel px-6 py-10 lg:border-l lg:px-12">
-        <form onSubmit={submit} className="mx-auto w-full max-w-sm">
-          <h2 className="font-serif text-3xl">Sign in</h2>
-          <p className="mt-2 text-sm text-mute">Use the desk copy your HOD or the registrar gave you.</p>
-          <label className="mt-8 block text-xs uppercase tracking-[0.14em] text-mute">
+          <div>
+            <h1 className="max-w-sm text-4xl font-semibold tracking-tight">The department library, in one place.</h1>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-mute">
+              Borrow, reserve, and read. Loans run fourteen days. Late copies are ₹5 a day.
+            </p>
+          </div>
+          <LottieSlot name="login" className="h-28 w-28" />
+        </section>
+        <form onSubmit={submit} className="p-8 sm:p-10">
+          <h2 className="text-2xl font-semibold tracking-tight">Sign in</h2>
+          <p className="mt-1 text-sm text-mute">Use the account your HOD or the registrar gave you.</p>
+          <label className="mt-6 block text-xs font-medium text-mute">
             Username
-            <input className="field mt-2" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" />
+            <input className="field mt-1.5" value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" />
           </label>
-          <label className="mt-4 block text-xs uppercase tracking-[0.14em] text-mute">
+          <label className="mt-3 block text-xs font-medium text-mute">
             Password
-            <input className="field mt-2" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" />
+            <input className="field mt-1.5" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" />
           </label>
-          {error && (
-            <div className="mt-4">
-              <Note>{error}</Note>
-            </div>
-          )}
-          <Btn type="submit" className="mt-6 w-full py-3" disabled={pending}>
-            {pending ? 'Checking the register…' : 'Enter the reading room'}
+          {error && <div className="mt-3"><Note>{error}</Note></div>}
+          <Btn type="submit" className="mt-5 w-full rounded-xl py-2.5" disabled={pending}>
+            {pending ? 'Checking…' : 'Continue'}
           </Btn>
-
-          <div className="mt-10">
-            <p className="text-xs uppercase tracking-[0.14em] text-mute">Desk copies · password Library@123</p>
-            <ul className="mt-3 divide-y divide-line">
-              {desks.map(([label, id]) => (
-                <li key={id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUsername(id);
-                      setPassword('Library@123');
-                    }}
-                    className="flex w-full items-baseline justify-between py-2 text-left text-sm"
-                  >
-                    <span>{label}</span>
-                    <span className="text-mute">{id}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="mb-2 mt-8 text-xs text-mute">Desk copies · Library@123</p>
+          <ul className="grid grid-cols-2 gap-2">
+            {desks.map(([label, id]) => (
+              <li key={id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUsername(id);
+                    setPassword('Library@123');
+                  }}
+                  className="w-full rounded-xl border border-line px-3 py-2 text-left text-xs hover:bg-paper"
+                >
+                  <span className="block font-medium">{label}</span>
+                  <span className="text-mute">{id}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </form>
-      </section>
+      </motion.div>
     </div>
   );
 }

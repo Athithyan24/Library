@@ -5,6 +5,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        canvas: 'rgb(var(--canvas) / <alpha-value>)',
         paper: 'rgb(var(--paper) / <alpha-value>)',
         panel: 'rgb(var(--panel) / <alpha-value>)',
         ink: 'rgb(var(--ink) / <alpha-value>)',
@@ -15,11 +16,12 @@ export default {
         clay: 'rgb(var(--clay) / <alpha-value>)',
       },
       fontFamily: {
-        serif: ['Fraunces', 'Iowan Old Style', 'Palatino', 'serif'],
-        sans: ['Figtree', 'Avenir Next', 'Segoe UI', 'sans-serif'],
+        serif: ['Plus Jakarta Sans', 'Segoe UI', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Segoe UI', 'sans-serif'],
       },
       boxShadow: {
-        lift: '0 18px 40px -24px rgb(28 24 18 / 0.45)',
+        lift: '0 24px 50px -28px rgb(40 50 80 / 0.35)',
+        card: '0 8px 24px -16px rgb(40 50 80 / 0.45)',
       },
     },
   },
