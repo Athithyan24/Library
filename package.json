@@ -1,0 +1,14 @@
+{
+  "name": "cs-elibrary",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Departmental e-Library for Computer Science — PG mini project",
+  "scripts": {
+    "dev": "concurrently -n api,web -c green,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "seed": "npm run seed --prefix server",
+    "start": "npm run start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

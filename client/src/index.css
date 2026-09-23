@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: 243 239 230;
+  --panel: 255 252 247;
+  --ink: 28 25 21;
+  --mute: 110 102 92;
+  --line: 226 219 206;
+  --pine: 27 74 56;
+  --brass: 166 132 74;
+  --clay: 143 68 58;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: 18 17 15;
+  --panel: 28 26 23;
+  --ink: 243 237 226;
+  --mute: 168 158 144;
+  --line: 52 48 42;
+  --pine: 154 196 172;
+  --brass: 212 176 112;
+  --clay: 224 146 134;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { min-height: 100%; }
+
+body {
+  margin: 0;
+  background: rgb(var(--paper));
+  color: rgb(var(--ink));
+  font-family: Figtree, "Segoe UI", sans-serif;
+  font-feature-settings: "ss01";
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+::selection { background: rgb(var(--brass) / 0.35); }
+
+.num { font-variant-numeric: tabular-nums; }
+
+.field {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgb(var(--line));
+  background: rgb(var(--paper) / 0.55);
+  padding: 0.8rem 0.9rem;
+  outline: none;
+}
+
+.field:focus { border-color: rgb(var(--pine)); box-shadow: 0 0 0 4px rgb(var(--pine) / 0.12); }
+
+.spine {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
