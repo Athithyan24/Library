@@ -13,7 +13,7 @@ router.post('/auth/login', loginRules, login);
 
 router.use(protect);
 router.get('/auth/me', me);
-router.put('/auth/profile', updateProfile);
+router.put('/auth/profile', upload.single('avatar'), updateProfile);
 
 router.get('/departments', structure.listDepartments);
 router.post('/departments', allow('admin'), structure.createDepartment);
@@ -47,7 +47,7 @@ router.post(
 );
 router.put(
   '/books/:id',
-  allow('hod', 'admin'),
+  allow('hod', 'admin', 'student'),
   upload.fields([
     { name: 'cover', maxCount: 1 },
     { name: 'pdf', maxCount: 1 },

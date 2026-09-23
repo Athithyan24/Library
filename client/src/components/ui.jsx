@@ -41,6 +41,18 @@ export function Cover({ book, className = '', compact = false }) {
   );
 }
 
+export function Avatar({ person, className = 'h-9 w-9' }) {
+  const name = person?.name || '?';
+  if (person?.avatar) {
+    return <img src={person.avatar} alt="" className={`${className} rounded-full object-cover`} />;
+  }
+  return (
+    <span className={`grid place-items-center rounded-full bg-[#ffe7dc] font-semibold text-pine ${className}`}>
+      {name.slice(0, 1)}
+    </span>
+  );
+}
+
 export function Modal({ open, title, onClose, children, wide }) {
   useEffect(() => {
     if (!open) return undefined;

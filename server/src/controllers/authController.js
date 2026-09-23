@@ -20,6 +20,7 @@ export const publicUser = (user) => ({
   yearLabel: user.yearLabel,
   courseName: user.courseName,
   phone: user.phone,
+  avatar: user.avatar || '',
 });
 
 export const loginRules = [
@@ -63,6 +64,15 @@ export const updateProfile = asyncHandler(async (req, res) => {
     if (!ok) return res.status(401).json({ message: 'Current password is incorrect.' });
     if (String(newPassword).length < 6) return res.status(422).json({ message: 'Use at least 6 characters.' });
     user.password = await bcrypt.hash(newPassword, 10);
+  }
+
+  if (req.file) {
+    if (!req.file.mimetype.startsWith('image/')) {
+      return res.status(422).json({ message: 'Profile photo must be an image.' });
+    }
+    user.avatar = `/uploads/${req.file.filename}`;
+  } else if (req.body.removeAvatar === 'true') {
+    user.avatar = '';
   }
 
   await user.save();

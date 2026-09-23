@@ -67,7 +67,7 @@ export const adminDashboard = asyncHandler(async (_req, res) => {
 export const hodDashboard = asyncHandler(async (req, res) => {
   const department = req.user.department;
   const [titles, students] = await Promise.all([
-    Book.find({ department, isActive: true }).select('title borrowCount available quantity author coverColor'),
+    Book.find({ department, isActive: true }).select('title borrowCount available quantity author coverColor coverImage'),
     User.find({ department, role: 'student', isActive: true }).select('name courseName yearLabel programme'),
   ]);
   const bookIds = titles.map((book) => book._id);
@@ -129,14 +129,14 @@ export const studentDashboard = asyncHandler(async (req, res) => {
   const soon = new Date(now.getTime() + 2 * 86400000);
   const [loans, reservations, fines, favorites] = await Promise.all([
     IssuedBook.find({ student: req.user._id })
-      .populate('book', 'title author coverColor subject pdfUrl')
+      .populate('book', 'title author coverColor coverImage subject pdfUrl')
       .sort({ issueDate: -1 }),
     Reservation.find({ student: req.user._id, status: { $in: ['waiting', 'ready'] } }).populate(
       'book',
-      'title author coverColor'
+      'title author coverColor coverImage'
     ),
     Fine.find({ student: req.user._id, paid: false }),
-    Book.find({ _id: { $in: req.user.favorites } }).select('title author coverColor subject').limit(4),
+    Book.find({ _id: { $in: req.user.favorites } }).select('title author coverColor coverImage subject').limit(4),
   ]);
 
   const dueSoon = loans.filter((loan) => loan.status === 'issued' && loan.dueDate <= soon && loan.dueDate >= now);
@@ -158,8 +158,8 @@ export const studentDashboard = asyncHandler(async (req, res) => {
     }
   }
 
-  const recent = await Book.find({ isActive: true }).sort({ createdAt: -1 }).limit(4).select('title author coverColor subject available');
-  const popular = await Book.find({ isActive: true }).sort({ borrowCount: -1 }).limit(4).select('title author coverColor subject borrowCount available');
+  const recent = await Book.find({ isActive: true }).sort({ createdAt: -1 }).limit(4).select('title author coverColor coverImage subject available');
+  const popular = await Book.find({ isActive: true }).sort({ borrowCount: -1 }).limit(4).select('title author coverColor coverImage subject borrowCount available');
 
   res.json({
     loans: loans.filter((loan) => loan.status === 'issued'),
@@ -196,7 +196,7 @@ export const search = asyncHandler(async (req, res) => {
     $or: [{ title: regex }, { author: regex }, { isbn: regex }, { subject: regex }],
   };
   if (req.user.role === 'hod') bookFilter.department = req.user.department;
-  const books = await Book.find(bookFilter).select('title author subject coverColor').limit(6);
+  const books = await Book.find(bookFilter).select('title author subject coverColor coverImage').limit(6);
   let people = [];
   if (req.user.role !== 'student') {
     const peopleFilter = { name: regex, role: 'student' };

@@ -22,6 +22,16 @@ async function withRatings(books) {
   });
 }
 
+function imagePath(file) {
+  if (!file) return '';
+  if (!file.mimetype?.startsWith('image/')) {
+    const error = new Error('Book cover must be an image.');
+    error.status = 422;
+    throw error;
+  }
+  return `/uploads/${file.filename}`;
+}
+
 export const listCategories = asyncHandler(async (_req, res) => {
   const categories = await Category.find().sort({ name: 1 });
   res.json({ categories });
@@ -102,7 +112,7 @@ export const createBook = asyncHandler(async (req, res) => {
     quantity,
     available: quantity,
     coverColor: req.body.coverColor || '#1e4d3a',
-    coverImage: req.files?.cover?.[0] ? `/uploads/${req.files.cover[0].filename}` : '',
+    coverImage: imagePath(req.files?.cover?.[0]),
     pdfUrl: req.files?.pdf?.[0] ? `/uploads/${req.files.pdf[0].filename}` : req.body.pdfUrl || '',
     addedBy: req.user._id,
   });
@@ -129,13 +139,16 @@ export const updateBook = asyncHandler(async (req, res) => {
   if (req.user.role === 'hod' && String(book.department) !== String(req.user.department)) {
     return res.status(403).json({ message: 'This title belongs to another department.' });
   }
+  if (!['hod', 'admin', 'student'].includes(req.user.role)) {
+    return res.status(403).json({ message: 'You cannot update this title.' });
+  }
 
   const fields = ['title', 'author', 'isbn', 'publisher', 'category', 'edition', 'subject', 'description', 'coverColor'];
   fields.forEach((field) => {
     if (req.body[field] !== undefined && req.body[field] !== '') book[field] = req.body[field];
   });
   if (req.body.publicationYear) book.publicationYear = Number(req.body.publicationYear);
-  if (req.files?.cover?.[0]) book.coverImage = `/uploads/${req.files.cover[0].filename}`;
+  if (req.files?.cover?.[0]) book.coverImage = imagePath(req.files.cover[0]);
   if (req.files?.pdf?.[0]) book.pdfUrl = `/uploads/${req.files.pdf[0].filename}`;
   await book.save();
   await logActivity(req.user, 'Book updated', book.title);

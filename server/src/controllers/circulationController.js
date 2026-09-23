@@ -17,7 +17,7 @@ const FINE_PER_DAY = Number(process.env.FINE_PER_DAY || 5);
 
 const requestPopulate = [
   { path: 'student', select: 'name username courseName yearLabel programme department' },
-  { path: 'book', select: 'title author isbn available coverColor subject' },
+  { path: 'book', select: 'title author isbn available coverColor coverImage subject' },
 ];
 
 async function openLoan(studentId, bookId) {
@@ -153,7 +153,7 @@ export const listIssues = asyncHandler(async (req, res) => {
   }
   const issues = await IssuedBook.find(filter)
     .populate('student', 'name username courseName yearLabel')
-    .populate('book', 'title author coverColor isbn subject')
+    .populate('book', 'title author coverColor coverImage isbn subject')
     .sort({ issueDate: -1 })
     .limit(100);
   res.json({ issues });
@@ -272,7 +272,7 @@ export const listReservations = asyncHandler(async (req, res) => {
   if (req.query.status) filter.status = req.query.status;
   const reservations = await Reservation.find(filter)
     .populate('student', 'name username courseName yearLabel')
-    .populate('book', 'title author available coverColor')
+    .populate('book', 'title author available coverColor coverImage')
     .sort({ createdAt: 1 });
   res.json({ reservations });
 });
@@ -355,7 +355,7 @@ export const settleFine = asyncHandler(async (req, res) => {
 export const myReading = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).populate({
     path: 'recentlyViewed.book',
-    select: 'title author coverColor subject available',
+    select: 'title author coverColor coverImage subject available',
   });
   const issues = await IssuedBook.find({ student: req.user._id });
   const returned = issues.filter((item) => item.status === 'returned').length;

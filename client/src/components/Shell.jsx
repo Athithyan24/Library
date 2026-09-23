@@ -29,7 +29,7 @@ import {
 import { api } from '../lib/api';
 import { useAuth } from '../store/useAuth';
 import { useUi } from '../store/useUi';
-import { Btn } from './ui';
+import { Avatar, Btn } from './ui';
 
 const NAV = {
   admin: [
@@ -150,9 +150,7 @@ export function Shell() {
             onClick={() => setMenu((open) => !open)}
             className={`relative mb-4 flex items-center gap-3 rounded-2xl px-2 py-2 text-left hover:bg-paper ${collapsed ? 'justify-center' : ''}`}
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#ffe7dc] text-sm font-semibold text-pine">
-              {user.name.slice(0, 1)}
-            </span>
+            <Avatar person={user} className="h-9 w-9 shrink-0 text-sm" />
             {!collapsed && (
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{user.name}</span>
@@ -421,7 +419,11 @@ function CommandPalette({ open, onClose, items }) {
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {trends.map((book) => (
                   <button key={book._id} onClick={() => go(`/books/${book._id}`)} className="flex items-center gap-3 rounded-2xl border border-line p-2.5 text-left hover:bg-paper">
-                    <span className="h-12 w-12 shrink-0 rounded-xl" style={{ background: book.coverColor || '#ff5a30' }} />
+                    {book.coverImage ? (
+                      <img src={book.coverImage} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
+                    ) : (
+                      <span className="h-12 w-12 shrink-0 rounded-xl" style={{ background: book.coverColor || '#ff5a30' }} />
+                    )}
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-medium">{book.title}</span>
                       <span className="text-xs text-mute">{book.available > 0 ? `${book.available} on shelf` : 'Waitlist'}</span>

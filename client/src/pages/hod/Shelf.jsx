@@ -17,6 +17,8 @@ export default function Shelf() {
   const categories = useQuery({ queryKey: ['categories'], queryFn: async () => (await api.get('/categories')).data });
   const [form, setForm] = useState(blank);
   const [file, setFile] = useState(null);
+  const [cover, setCover] = useState(null);
+  const [preview, setPreview] = useState('');
   const [error, setError] = useState('');
 
   const set = (key) => (event) => setForm({ ...form, [key]: event.target.value });
@@ -26,11 +28,14 @@ export default function Shelf() {
       const body = new FormData();
       Object.entries(form).forEach(([key, value]) => body.append(key, value));
       if (file) body.append('pdf', file);
+      if (cover) body.append('cover', cover);
       return (await api.post('/books', body)).data;
     },
     onSuccess: () => {
       setForm(blank);
       setFile(null);
+      setCover(null);
+      setPreview('');
       setError('');
       client.invalidateQueries({ queryKey: ['books'] });
     },
@@ -66,6 +71,20 @@ export default function Shelf() {
           <input className="field" placeholder="Subject" value={form.subject} onChange={set('subject')} />
           <textarea className="field min-h-20" placeholder="Why it is on this shelf" value={form.description} onChange={set('description')} />
           <input className="field" type="number" min="1" value={form.quantity} onChange={set('quantity')} />
+          <label className="block text-xs text-mute">
+            Cover image
+            <input
+              className="mt-1 block w-full text-sm"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              onChange={(event) => {
+                const next = event.target.files?.[0] || null;
+                setCover(next);
+                setPreview(next ? URL.createObjectURL(next) : '');
+              }}
+            />
+          </label>
+          {preview && <img src={preview} alt="" className="h-36 w-28 rounded-xl object-cover" />}
           <div className="flex gap-2">
             {colors.map((color) => (
               <button

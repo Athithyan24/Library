@@ -35,8 +35,12 @@ export default function StudentHome() {
         </div>
         <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
           {loans.map((loan) => (
-            <Link key={loan._id} to={`/books/${loan.book?._id}`} className="flex h-44 w-16 shrink-0 items-center justify-center rounded-r-xl rounded-l-sm shadow-lift" style={{ background: loan.book?.coverColor }}>
-              <span className="spine px-2 text-center font-serif text-sm text-white">{loan.book?.title}</span>
+            <Link key={loan._id} to={`/books/${loan.book?._id}`} className="flex h-44 w-16 shrink-0 items-center justify-center overflow-hidden rounded-r-xl rounded-l-sm shadow-lift" style={{ background: loan.book?.coverColor }}>
+              {loan.book?.coverImage ? (
+                <img src={loan.book.coverImage} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <span className="spine px-2 text-center font-serif text-sm text-white">{loan.book?.title}</span>
+              )}
             </Link>
           ))}
           {!loans.length && <p className="text-sm text-mute">Your loan shelf is clear.</p>}

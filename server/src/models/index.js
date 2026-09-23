@@ -14,6 +14,7 @@ const userSchema = new Schema(
     yearLabel: { type: String, default: '' },
     courseName: { type: String, default: '' },
     phone: { type: String, default: '' },
+    avatar: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
     recentlyViewed: [

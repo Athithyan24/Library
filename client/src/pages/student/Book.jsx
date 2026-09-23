@@ -22,6 +22,10 @@ export default function BookPage() {
   const [reader, setReader] = useState(false);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
+  const [editing, setEditing] = useState(false);
+  const [edit, setEdit] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
 
   const run = useMutation({
     mutationFn: async ({ url, body }) => (await api.post(url, body || {})).data,
@@ -38,6 +42,40 @@ export default function BookPage() {
   if (query.isError) return <Note>{query.error.message}</Note>;
   const { book, reviews } = query.data;
   const saved = (savedQuery.data?.books || []).some((item) => item._id === book._id) || (favorites || []).includes(book._id);
+  const canEdit = role === 'student' || role === 'hod' || role === 'admin';
+
+  const beginEdit = () => {
+    setEdit({
+      title: book.title || '',
+      author: book.author || '',
+      isbn: book.isbn || '',
+      publisher: book.publisher || '',
+      edition: book.edition || '',
+      publicationYear: book.publicationYear || '',
+      subject: book.subject || '',
+      description: book.description || '',
+    });
+    setCoverFile(null);
+    setPdfFile(null);
+    setEditing(true);
+  };
+
+  const saveEdit = async (event) => {
+    event.preventDefault();
+    const body = new FormData();
+    Object.entries(edit).forEach(([key, value]) => body.append(key, value ?? ''));
+    if (coverFile) body.append('cover', coverFile);
+    if (pdfFile) body.append('pdf', pdfFile);
+    try {
+      await api.put(`/books/${book._id}`, body);
+      setError('');
+      setEditing(false);
+      client.invalidateQueries({ queryKey: ['book', id] });
+      client.invalidateQueries({ queryKey: ['books'] });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[240px_1fr]">
@@ -80,7 +118,36 @@ export default function BookPage() {
             </Btn>
           )}
           {book.pdfUrl && <Btn tone="quiet" onClick={() => setReader(true)}>Open digital copy</Btn>}
+          {canEdit && (
+            <Btn tone="quiet" onClick={beginEdit}>Update book</Btn>
+          )}
         </div>
+        {editing && (
+          <form onSubmit={saveEdit} className="mt-4 max-w-lg space-y-2 rounded-2xl border border-line p-4">
+            {['title', 'author', 'isbn', 'publisher', 'edition', 'publicationYear', 'subject'].map((key) => (
+              <input
+                key={key}
+                className="field"
+                value={edit[key]}
+                placeholder={key}
+                onChange={(event) => setEdit({ ...edit, [key]: event.target.value })}
+              />
+            ))}
+            <textarea className="field min-h-20" value={edit.description} onChange={(event) => setEdit({ ...edit, description: event.target.value })} />
+            <label className="block text-xs text-mute">
+              Replace cover
+              <input className="mt-1 block w-full text-sm" type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={(event) => setCoverFile(event.target.files?.[0] || null)} />
+            </label>
+            <label className="block text-xs text-mute">
+              Optional PDF
+              <input className="mt-1 block w-full text-sm" type="file" accept="application/pdf" onChange={(event) => setPdfFile(event.target.files?.[0] || null)} />
+            </label>
+            <div className="flex gap-2">
+              <Btn type="submit">Save changes</Btn>
+              <Btn tone="quiet" onClick={() => setEditing(false)}>Cancel</Btn>
+            </div>
+          </form>
+        )}
         {role === 'student' && <input className="field mt-3 max-w-md" placeholder="A note for the desk" value={note} onChange={(event) => setNote(event.target.value)} />}
 
         <section className="mt-10">
