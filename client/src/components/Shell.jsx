@@ -203,7 +203,7 @@ export function Shell() {
             <div className="mt-4 rounded-2xl bg-[#fff1ea] p-4 dark:bg-paper">
               <p className="text-sm font-semibold leading-snug">Need a title for class?</p>
               <p className="mt-1 text-xs leading-relaxed text-mute">Search the department shelf and send a request to the desk.</p>
-              <button onClick={() => navigate('/catalog')} className="mt-3 w-full rounded-xl bg-ink py-2 text-sm font-medium text-white">
+              <button onClick={() => navigate('/catalog')} className="mt-3 w-full rounded-xl bg-ink py-2 text-sm font-medium text-white dark:text-black">
                 Browse library
               </button>
             </div>
