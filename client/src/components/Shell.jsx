@@ -235,7 +235,7 @@ export function Shell() {
                   <div key={group} className="flex shrink-0 items-center gap-12 pr-12">
                     {[0, 1].map((copy) => (
                       <div key={copy} className="flex shrink-0 items-center gap-3">
-                        <img src="/logo.webp" alt="" className="h-7 w-7 shrink-0 object-contain" />
+                        <img src="/logo.webp" alt="" className="h-7 w-7 rounded-full shrink-0 object-contain" />
                         <span className="whitespace-nowrap text-lg font-semibold leading-tight tracking-tight text-ink">
                           Departmental e-Library Management System for Computer Science
                         </span>

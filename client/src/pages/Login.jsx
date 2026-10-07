@@ -134,7 +134,7 @@ export default function Login() {
                 </span>
                 <div>
                   <p className="text-sm font-semibold text-ink">Sahans Beham</p>
-                  <p className="mt-0.5 text-xs text-mute">II Year M.Sc.</p>
+                  <p className="mt-0.5 text-xs text-mute">II<sup className="text-[8px]">nd</sup> Year M.Sc.</p>
                 </div>
               </div>
               <p className="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-mute">
