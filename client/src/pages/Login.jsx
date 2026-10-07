@@ -123,13 +123,32 @@ export default function Login() {
 
         <section className="relative hidden overflow-hidden bg-[#fffaf6] px-12 pb-0 pt-28 dark:bg-[#171923] lg:flex lg:min-h-[720px] lg:flex-col">
           <div className="relative z-10 max-w-md">
-            <span className="block h-8 text-4xl font-bold leading-none text-pine" aria-hidden="true">“</span>
-            <h2 className="max-w-sm text-[26px] font-medium leading-[1.42] tracking-tight text-ink">
-              A good book opens a new world. Your next one is waiting on the department shelf.
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-pine">Project</p>
+            <h2 className="mt-2 max-w-sm text-[25px] font-semibold leading-[1.35] tracking-tight text-ink">
+              Departmental e-Library Management System for Computer Science
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-mute">
-              Find, borrow, and enjoy your next great read — all in one place.
-            </p>
+            <div className="mt-5 rounded-2xl border border-line bg-panel/80 p-4 shadow-card">
+              <div className="flex items-center gap-3">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-pine/10 text-sm font-bold text-pine" aria-hidden="true">
+                  SB
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-ink">Sahans Beham</p>
+                  <p className="mt-0.5 text-xs text-mute">II Year M.Sc.</p>
+                </div>
+              </div>
+              <p className="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-mute">
+                Department of Computer Science
+              </p>
+            </div>
+            <div className="mt-3 flex items-start gap-3 rounded-2xl border border-line bg-panel/60 px-4 py-3">
+              <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-pine" aria-hidden="true" />
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-pine">Guided by</p>
+                <p className="mt-1 text-sm font-semibold text-ink">Athithyan A</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-mute">Muslim Arts College, Thiruvidhangode</p>
+              </div>
+            </div>
           </div>
 
           <svg

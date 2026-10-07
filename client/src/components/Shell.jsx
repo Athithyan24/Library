@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Bell,
@@ -81,6 +81,7 @@ const CRUMB = {
 };
 
 export function Shell() {
+  const prefersReducedMotion = useReducedMotion();
   const user = useAuth((state) => state.user);
   const logout = useAuth((state) => state.logout);
   const collapsed = useUi((state) => state.collapsed);
@@ -221,7 +222,29 @@ export function Shell() {
         </motion.aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex items-center gap-3 border-b border-line px-4 py-3.5 md:px-6">
+          <header className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3.5 md:px-6">
+            <div className="hidden h-8 w-full overflow-hidden border-b border-pine/15 xl:block" aria-label="Departmental e-Library Management System for Computer Science">
+              <span className="sr-only">Departmental e-Library Management System for Computer Science</span>
+              <motion.div
+                className="flex h-full w-max items-center"
+                aria-hidden="true"
+                animate={prefersReducedMotion ? { x: '-50%' } : { x: ['-50%', '0%'] }}
+                transition={prefersReducedMotion ? undefined : { duration: 24, ease: 'linear', repeat: Infinity }}
+              >
+                {[0, 1].map((group) => (
+                  <div key={group} className="flex shrink-0 items-center gap-12 pr-12">
+                    {[0, 1].map((copy) => (
+                      <div key={copy} className="flex shrink-0 items-center gap-3">
+                        <img src="/logo.webp" alt="" className="h-7 w-7 shrink-0 object-contain" />
+                        <span className="whitespace-nowrap text-lg font-semibold leading-tight tracking-tight text-ink">
+                          Departmental e-Library Management System for Computer Science
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
             <button className="rounded-xl border border-line p-2 md:hidden" onClick={() => setMobileNav(true)} aria-label="Open menu">
               <Menu size={16} />
             </button>
